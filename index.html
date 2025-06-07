@@ -9,12 +9,12 @@
     <style>  
         :root {
             /*#59684d*/
-            --primary-color: #212121;
-            --accent-color: #616061;
-            --text-color: #5e5e5e;
+            --primary-color: #59684d;
+            --accent-color: #59684d;
+            --text-color: #59684d;
             --footer-color: #727f80;
             --light-gray: #edf0f0;
-            --line-color: #929292;
+            --line-color: #59684d79;
             --transition-speed: 0.1s;
 
             --hex-w: 800px;                 /*  ➜ change here if SVG size changes           */
@@ -186,41 +186,33 @@
             margin-bottom: 1.5em;
         }
 
-        .social-links {
-            display: flex;
-            justify-content: center;
-            gap: 10px;
-            margin: 50px 0;
-            flex-wrap: wrap;
+        /* =====================================================
+           NEW: minimalist action buttons (RSVP | Konum | Foto)
+           ===================================================== */
+        .action-links{
+            display:flex;
+            justify-content:center;
+            gap:5px;
+            margin:50px 0 10px; /* ↑ top 30px, ↓ bottom 10px */
+            flex-wrap:wrap;
         }
 
-        .social-link {
-            color: var(--primary-color);
-            text-decoration: none;
-            padding: 5px 15px;
-            border: 2px solid var(--primary-color);
-            border-radius: 30px;
-            transition: all var(--transition-speed);
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            font-weight: 500;
+        .action-link{
+            font-family:'Lora','Georgia',serif;
+            font-size:0.7rem;
+            letter-spacing:0.1px;
+            color:var(--frame-border-color);
+            text-decoration:none;
+            padding:5px 10px;
+            border:1.5px solid var(--frame-border-color);
+            border-radius:24px; /* echoes the card's rounded corners */
+            transition:background var(--transition-speed), color var(--transition-speed), transform var(--transition-speed);
         }
-
-        .social-link:hover {
-            background: var(--primary-color);
-            color: white;
-            transform: translateY(-2px);
-        }
-
-        .no-blue-link {
-            color: var(--text-color); /* Sets the link color to the same as the main text */
-            text-decoration: none; /* Removes underline from the link */
-        }
-
-        .no-blue-link:hover {
-            color: var(--accent-color); /* Optional: changes color on hover to accent color */
-            text-decoration: underline; /* Adds underline on hover */
+        .action-link:hover,
+        .action-link:focus{
+            background:var(--frame-border-color);
+            color:#fff;
+            transform:translateY(-2px);
         }
 
         footer {
@@ -268,17 +260,19 @@
         </section>
 
 
-        <div class="social-links">
-            <a href="https://linkedin.com/in/kemalinecik" class="social-link" target="_blank" data-i18n="linkedin"></a>
-            <a href="https://github.com/inecik" class="social-link" target="_blank" data-i18n="github"></a>
-            <a href="https://scholar.google.com/citations?user=zPqEQ-IAAAAJ&hl=en&oi=ao" class="social-link" target="_blank" data-i18n="scholar"></a>
-            <a href="https://twitter.com/kemalinecik" class="social-link" target="_blank" data-i18n="twitter"></a>
-            <a href="https://bsky.app/profile/inecik.bsky.social" class="social-link" target="_blank" data-i18n="bluesky"></a>
+        <!-- ==================== Subtle Action Buttons ==================== -->
+        <div class="action-links">
+            <!-- LCV / RSVP phone call -->
+            <a href="tel:+903129111379" class="action-link" data-i18n="rsvp"></a>
+            <!-- Venue location link (Google Maps) -->
+            <a href="https://maps.app.goo.gl/abcd1234" class="action-link" target="_blank" data-i18n="location"></a>
+            <!-- Shared photo album -->
+            <a href="https://photos.app.goo.gl/yourAlbumId" class="action-link" target="_blank" data-i18n="photos"></a>
         </div>
+
 
         <footer>
             <p data-i18n="footer_p1"></p>
-            <p data-i18n="footer_p2" class="address"></p>
         </footer>
 
     </div>
@@ -302,31 +296,15 @@
         // Attach to `window` only if it isn’t there yet to avoid the
         // "Can't create duplicate variable" SyntaxError.
         window.translations = window.translations || {
-            en: {
-                title: "no en",
-                name: "no en",
-                position: "no en",
-                bio1: `no en`,
-                linkedin: "no en",
-                github: "no en",
-                scholar: "no en",
-                twitter: "no en",
-                bluesky: "no en",
-                footer_p1: "no en",
-                footer_p2: `no en`
-            },
             tr: {
                 title:  "Ekin Gökçe ve Kemal",
                 name: "Ekin Gökçe ve Kemal",
                 position: "Lorem ipsum dolor sit amet",
                 bio1: `Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed fringilla sagittis turpis, ac pulvinar diam ultrices non. Integer eget volutpat ex, vel auctor est. Sed dictum sodales luctus. Nam id purus a felis blandit congue vitae et massa. Suspendisse vel consectetur ante. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Quisque semper, mi nec feugiat varius, lorem odio commodo tellus, in volutpat tortor ante et dolor. In sit amet nisl sem. Integer vel augue imperdiet, finibus nisi sit amet, tempor leo. Morbi lacus ipsum, pulvinar at nulla quis, sollicitudin consectetur massa.`,
-                linkedin: "LinkedIn",
-                github: "GitHub",
-                scholar: "Scholar",
-                twitter: "Twitter",
-                bluesky: "Bluesky",
-                footer_p1: "© 2025 Ekin Gökçe Çiçek ve Kemal İnecik.",
-                footer_p2: `Tüm hakları saklıdır.`
+                rsvp: "LCV Ara",
+                location: "Konum",
+                photos: "Fotoğraflar",
+                footer_p1: "© 2025 Çiçek & İnecik Aileleri.<br>Tüm hakları saklıdır.",
             },
         };
 
