@@ -4,8 +4,12 @@
     <!-- Remaining -->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Ekin Gökçe ve Kemal">
-    <title>Ekin Gökçe ve Kemal</title>   <!-- will be overwritten by JS -->
+    <meta name="description" content="Bu özel günümüzde sizleri de aramızda görmekten mutluluk duyarız.">
+    <meta property="og:title" content="Ekin Gökçe ve Kemal'in Düğünü"/>
+    <meta property="og:description" content="Bu özel günümüzde sizleri de aramızda görmekten mutluluk duyarız."/>
+    <meta property="og:url" content="https://ekingokcevekemal.com"/>
+    <meta property="og:image"content="images/invitation.jpg"/>
+    <title>Ekin Gökçe ve Kemal'in Düğünü</title>   <!-- will be overwritten by JS -->
     <style>  
         :root {
             /*#59684d*/
@@ -26,7 +30,7 @@
 
             /* ------ new inner frame ------ */
             --frame-offset: 60px;   /* distance to honey‑comb border */
-            --frame-pad: 10px;      /* inner padding for content */
+            --frame-pad: 30px;      /* inner padding for content */
             --frame-opacity: 1.0;  /* white frame opacity */
             --frame-border-color: #59684d; /* color of the outer border */
         }
@@ -41,8 +45,8 @@
         }
 
         .container {
-            max-width: 720px;
-            margin: 80px auto;
+            max-width: 480px;
+            margin: 40px auto;
             padding: 0 40px;
         }
 
@@ -50,14 +54,15 @@
             width: 120px;
             height: 120px;
             border-radius: 50%;
-            margin-top: 25px;
-            margin-bottom: -5px;
+            margin-top: 15px;
+            margin-bottom: 15px;
             transition: transform var(--transition-speed);
         }
 
         .name-img{
+            width: 260px;
             margin-top:auto;                  /* boşluğu yukarı iter, alt çizgiye yapışır */
-            margin-bottom:var(--name-bottom-pad);
+            margin-bottom: 15px;
             max-width:100%;
             height:auto;
         }
@@ -145,8 +150,8 @@
 
         @media (max-width: 520px) {
             :root{
-                --frame-offset:5px;
-                --frame-pad:10px;
+                --frame-offset:10px;
+                --frame-pad:15px;
 
                 /* -------- mobile: scale tile -------- */
                 --hex-w:600px;
@@ -155,14 +160,11 @@
                 --hex-sy:var(--hex-h);
                 --hex-ox:calc(var(--hex-w)*0.75);
                 --hex-oy:calc(var(--hex-h)*0.5);
-
-                /* ---- mobile: name alt boşluğu küçült ---- */
-                --name-bottom-pad:10px;
             }
 
             .container {
-                padding: 0 10px;
-                margin: 20px auto;
+                padding: 0 20px;
+                margin: 40px auto;
             }
 
             .bio-section {
@@ -199,7 +201,7 @@
 
         .action-link{
             font-family:'Lora','Georgia',serif;
-            font-size:0.7rem;
+            font-size:0.8rem;
             letter-spacing:0.1px;
             color:var(--frame-border-color);
             text-decoration:none;
@@ -253,8 +255,8 @@
 
         <section class="bio-section">
             <div class="bio-frame">
-                <img src="images/main-flower.svg" alt="Ekin Gökçe ve Kemal" class="profile-img">
-                <img src="images/name.svg" alt="Ekin Gökçe ve Kemal" class="name-img">
+                <img src="images/main-flower.svg" alt="Ekin Gökçe ve Kemal'in Düğünü" class="profile-img">
+                <img src="images/name.svg" alt="Ekin Gökçe ve Kemal'in Düğünü" class="name-img">
 
             </div>
         </section>
@@ -265,9 +267,9 @@
             <!-- LCV / RSVP phone call -->
             <a href="tel:+903129111379" class="action-link" data-i18n="rsvp"></a>
             <!-- Venue location link (Google Maps) -->
-            <a href="https://maps.app.goo.gl/abcd1234" class="action-link" target="_blank" data-i18n="location"></a>
+            <a href="https://maps.app.goo.gl/8tifkPKuV3xDnzbL9" class="action-link" target="_blank" data-i18n="location"></a>
             <!-- Shared photo album -->
-            <a href="https://photos.app.goo.gl/yourAlbumId" class="action-link" target="_blank" data-i18n="photos"></a>
+            <a href="https://drive.google.com/drive/folders/12VRaXiVZm_cN0YpMr3OLmcd45qiplJoZ?usp=sharing" class="action-link" target="_blank" data-i18n="photos"></a>
         </div>
 
 
@@ -276,7 +278,6 @@
         </footer>
 
     </div>
-
 
     <script>
     /*
@@ -297,10 +298,10 @@
         // "Can't create duplicate variable" SyntaxError.
         window.translations = window.translations || {
             tr: {
-                title:  "Ekin Gökçe ve Kemal",
-                name: "Ekin Gökçe ve Kemal",
-                position: "Lorem ipsum dolor sit amet",
-                bio1: `Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed fringilla sagittis turpis, ac pulvinar diam ultrices non. Integer eget volutpat ex, vel auctor est. Sed dictum sodales luctus. Nam id purus a felis blandit congue vitae et massa. Suspendisse vel consectetur ante. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Quisque semper, mi nec feugiat varius, lorem odio commodo tellus, in volutpat tortor ante et dolor. In sit amet nisl sem. Integer vel augue imperdiet, finibus nisi sit amet, tempor leo. Morbi lacus ipsum, pulvinar at nulla quis, sollicitudin consectetur massa.`,
+                title:  "Ekin Gökçe ve Kemal'in Düğünü",
+                name: "Ekin Gökçe ve Kemal'in Düğünü",
+                position: "Lorem ipsum dolor sit amet.",
+                bio1: `Lorem ipsum dolor sit amet.`,
                 rsvp: "LCV Ara",
                 location: "Konum",
                 photos: "Fotoğraflar",
@@ -315,7 +316,7 @@
             const dict = translations[lang] || translations.tr;
 
             /* new line ↓ */
-            document.title = dict.title || "Ekin Gökçe ve Kemal";
+            document.title = dict.title || "Ekin Gökçe ve Kemal'in Düğünü";
 
             document.documentElement.lang = lang;
             document.querySelectorAll('[data-i18n]').forEach(el => {
@@ -337,5 +338,6 @@
         });
     })();
     </script>
+
 </body>
 </html>
