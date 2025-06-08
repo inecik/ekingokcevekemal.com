@@ -239,6 +239,15 @@
             color:#fff;
             transform:translateY(-2px);
         }
+        .action-break{flex-basis:100%;height:0;}
+
+        /* ------------ COUNTDOWN (new) ------------- */
+        .countdown{    
+            text-align:center;
+            color:var(--footer-color);
+            font-size:0.7rem;
+            margin-top:40px;
+        }
 
         footer {
             text-align: center;
@@ -320,83 +329,193 @@
             </div>
         </section>
 
-
         <!-- ==================== Subtle Action Buttons ==================== -->
         <div class="action-links">
-            <!-- LCV / RSVP phone call -->
-            <a href="tel:+903129111379" class="action-link" data-i18n="rsvp"></a>
-            <!-- Venue location link (Google Maps) -->
-            <a href="https://maps.app.goo.gl/8tifkPKuV3xDnzbL9" class="action-link" target="_blank" data-i18n="location"></a>
             <!-- Shared photo album -->
             <a href="https://drive.google.com/drive/folders/12VRaXiVZm_cN0YpMr3OLmcd45qiplJoZ?usp=sharing" class="action-link" target="_blank" data-i18n="photos"></a>
+            <!-- Venue location link (Google Maps) -->
+            <a href="https://maps.app.goo.gl/8tifkPKuV3xDnzbL9" class="action-link" target="_blank" data-i18n="location"></a>
+            <!-- Satır kırıcı -->
+            <span class="action-break"></span>
+            <!-- LCV / RSVP phone call -->
+            <a href="tel:+903129111379" class="action-link" data-i18n="rsvp"></a>
+            <!-- NEW: Add‑to‑Calendar button -->
+            <a href="#" id="calendar-btn" class="action-link" data-i18n="calendar"></a>
         </div>
 
-
+        <!-- =============== Countdown Timer (appears above footer) =============== -->
+        <div id="countdown" class="countdown"></div>
         <footer>
             <p data-i18n="footer_p1"></p>
         </footer>
 
     </div>
 
-    <script>
-    /*
-     |------------------------------------------------------------------
-     |  i18n initialisation – wrapped in an IIFE so we don’t pollute the
-     |  global scope every time the browser or a hot‑reload re‑executes
-     |  this script.  It also guards against duplicate variable errors
-     |  by checking whether we already placed our objects on `window`.
-     |------------------------------------------------------------------
-    */
+<script>
+    /*************** CONFIG ***************/
+    const EVENT_START_ISO = '2025-06-28T19:00:00+03:00';
+    const EVENT_END_ISO   = '2025-06-28T23:00:00+03:00';
+    const EVENT_TITLE = "Ekin Gökçe ve Kemal'in Düğünü";
+    const EVENT_DESCRIPTION = "Bu özel günümüzde, Filiz & Şeref Çiçek ile Hacer & Ahmet İnecik olarak sizleri de aramızda görmekten mutluluk duyarız.";
+    const EVENT_LOCATION = "Divan Çukurhan, Necatibey Mah. Depo Sk. No:3, Ulus/Altındağ, Ankara, Türkiye";
+    const WEBSITE_URL = 'https://ekingokcevekemal.com';
+    const EVENT_TZ = 'Europe/Istanbul';
+
+    /********** ADD-TO-CALENDAR ***********/
+    (function(){
+    const calBtn = document.getElementById('calendar-btn');
+    if(!calBtn) return;
+
+    /* 1) ICS download (unchanged) */
+    function toICS(){
+        const pad = n => String(n).padStart(2,'0');
+        const toUTC = iso => {
+        const d = new Date(iso);
+        return `${d.getUTCFullYear()}${pad(d.getUTCMonth()+1)}${pad(d.getUTCDate())}T${pad(d.getUTCHours())}${pad(d.getUTCMinutes())}${pad(d.getUTCSeconds())}Z`;
+        };
+        const addressEsc = EVENT_LOCATION.replace(/,/g,'\\,');
+        return [
+        'BEGIN:VCALENDAR',
+        'VERSION:2.0',
+        'PRODID:-//EK Wedding//iCal//TR',
+        'CALSCALE:GREGORIAN',
+        'BEGIN:VEVENT',
+        `DTSTART:${toUTC(EVENT_START_ISO)}`,
+        `DTEND:${toUTC(EVENT_END_ISO)}`,
+        `SUMMARY:${EVENT_TITLE}`,
+        `DESCRIPTION:${EVENT_DESCRIPTION}`,
+        `LOCATION:${addressEsc}`,
+        'GEO:39.9411;32.8599',
+        `X-APPLE-STRUCTURED-LOCATION;VALUE=URI;X-ADDRESS="${EVENT_LOCATION}";X-APPLE-RADIUS=72;X-TITLE="Divan Çukurhan":geo:39.9411,32.8599`,
+        `URL:${WEBSITE_URL}`,
+        'END:VEVENT',
+        'END:VCALENDAR'
+        ].join('\r\n');
+    }
+    function downloadICS(){
+        const blob = new Blob([toICS()],{type:'text/calendar'});
+        const url = URL.createObjectURL(blob);
+        const a = Object.assign(document.createElement('a'),{href:url,download:`${EVENT_TITLE.replace(/\s+/g,'_')}.ics`});
+        document.body.appendChild(a); a.click(); document.body.removeChild(a); URL.revokeObjectURL(url);
+    }
+
+    /* 2) Google Calendar link – timezone-aware */
+    function openGoogleCal(){
+        const fmtGoogle = iso => iso.slice(0,19).replace(/[-:]/g,''); // YYYYMMDDTHHMMSS (local)
+        const params = new URLSearchParams({
+        action:'TEMPLATE',
+        text:EVENT_TITLE,
+        dates:`${fmtGoogle(EVENT_START_ISO)}/${fmtGoogle(EVENT_END_ISO)}`,
+        details:`${EVENT_DESCRIPTION}\n\n${WEBSITE_URL}`,
+        location:EVENT_LOCATION,
+        ctz: EVENT_TZ
+        });
+        window.open(`https://calendar.google.com/calendar/render?${params.toString()}`,'_blank');
+    }
+
+    calBtn.addEventListener('click',e=>{e.preventDefault();downloadICS();openGoogleCal();});
+    })();
+
+    /******** COUNTDOWN (seconds) *********/
+    (function(){
+    const el=document.getElementById('countdown'); if(!el) return;
+    el.style.cssText='text-align:center;color:var(--footer-color);font-size:0.7rem;margin-top:40px;';
+    const fmt=n=>String(n).padStart(2,'0');
+    function refresh(){
+        const now=Date.now();const start=new Date(EVENT_START_ISO).getTime();
+        let diff=start-now;let prefix='Düğüne kalan: ';
+        if(diff<0){diff=-diff;prefix='Düğünden bu yana: ';}
+        const days=Math.floor(diff/864e5);
+        const hrs=Math.floor(diff%864e5/36e5);
+        const mins=Math.floor(diff%36e5/6e4);
+        const secs=Math.floor(diff%6e4/1e3);
+        el.textContent=`${prefix} ${days} gün ${fmt(hrs)}:${fmt(mins)}:${fmt(secs)} saat`;
+    }
+    refresh(); setInterval(refresh,1000);
+    })();
+
+    /***************************************
+     * COUNTDOWN / COUNT‑UP
+     ***************************************/
+    (function () {
+    const el = document.getElementById('countdown');
+    if (!el) return;
+
+    // Stil
+    el.style.cssText =
+        'text-align:center;color:var(--footer-color);font-size:0.7rem;margin-top:40px;';
+
+    const fmt = n => n.toString().padStart(2, '0');
+
+    function tick() {
+        const now = Date.now();
+        const start = new Date(EVENT_START_ISO).getTime();
+
+        let diff = start - now;
+        let prefix = 'Düğüne kalan: ';
+        if (diff < 0) {
+        diff = -diff;
+        prefix = 'Düğünden bu yana: ';
+        }
+
+        const days = Math.floor(diff / 864e5);
+        const hours = Math.floor((diff % 864e5) / 36e5);
+        const mins = Math.floor((diff % 36e5) / 6e4);
+        const secs = Math.floor((diff % 6e4) / 1e3);
+
+        el.textContent = `${prefix}${days} gün ${fmt(hours)}:${fmt(mins)}:${fmt(
+        secs
+        )} saat`;
+    }
+
+    tick();               // İlk çizim
+    setInterval(tick, 1000); // Her saniye güncelle
+    })();
+
+    /***************************************
+     * I18N INITIALISATION (unchanged except new keys)
+     ***************************************/
     (() => {
-        // Prevent the whole block from running twice (e.g. in live reload)
         if (window.i18nInitialised) return;
         window.i18nInitialised = true;
 
-        /* ----------------- TRANSLATION DICTIONARY ----------------- */
-        // Attach to `window` only if it isn’t there yet to avoid the
-        // "Can't create duplicate variable" SyntaxError.
         window.translations = window.translations || {
             tr: {
                 title:  "Ekin Gökçe ve Kemal'in Düğünü",
                 name: "Ekin Gökçe ve Kemal'in Düğünü",
-                position: "Lorem ipsum dolor sit amet.",
-                bio1: `Lorem ipsum dolor sit amet.`,
+                position: "",
+                bio1: "",
                 rsvp: "LCV İletişim",
                 location: "Konum",
                 photos: "Fotoğraflar",
+                website: "Site",
+                calendar: "Takvime Ekle",
                 footer_p1: "© 2025 Çiçek & İnecik Aileleri.<br>Tüm hakları saklıdır.",
             },
         };
 
-        const translations = window.translations; // shorthand
+        const translations = window.translations;
 
-        /* ----------------- LANGUAGE HANDLER ----------------- */
         function setLanguage(lang){
             const dict = translations[lang] || translations.tr;
-
-            /* new line ↓ */
-            document.title = dict.title || "Ekin Gökçe ve Kemal'in Düğünü";
-
+            document.title = dict.title || EVENT_TITLE;
             document.documentElement.lang = lang;
             document.querySelectorAll('[data-i18n]').forEach(el => {
-            const key = el.getAttribute('data-i18n');
-            el.innerHTML = dict[key] || key;
+                const key = el.getAttribute('data-i18n');
+                el.innerHTML = dict[key] || key;
             });
-            document.querySelectorAll('.lang-btn')
-                  .forEach(btn => btn.classList.toggle('active', btn.dataset.lang === lang));
+            document.querySelectorAll('.lang-btn').forEach(btn => btn.classList.toggle('active', btn.dataset.lang === lang));
             localStorage.setItem('lang', lang);
         }
 
-        // Initial load: use previously chosen language or browser default
         const userLang = localStorage.getItem('lang') || (navigator.language || 'tr').slice(0,2);
         setLanguage(['tr'].includes(userLang) ? userLang : 'tr');
 
-        // Button click events
         document.querySelectorAll('.lang-btn').forEach(btn => {
             btn.addEventListener('click', () => setLanguage(btn.dataset.lang));
         });
     })();
-    </script>
+</script>
 
 </body>
 </html>
