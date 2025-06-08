@@ -340,7 +340,11 @@
             <!-- LCV / RSVP phone call -->
             <a href="tel:+903129111379" class="action-link" data-i18n="rsvp"></a>
             <!-- NEW: Add‑to‑Calendar button -->
-            <a href="#" id="calendar-btn" class="action-link" data-i18n="calendar"></a>
+            <!-- <a href="#" id="calendar-btn" class="action-link" data-i18n="calendar"></a> -->
+            <a href="invite/wedding.ics"
+                id="calendar-btn"
+                class="action-link"
+                data-i18n="calendar"></a>
         </div>
 
         <!-- =============== Countdown Timer (appears above footer) =============== -->
@@ -361,78 +365,48 @@
     const WEBSITE_URL = 'https://ekingokcevekemal.com';
     const EVENT_TZ = 'Europe/Istanbul';
 
-    /********** ADD-TO-CALENDAR ***********/
-    (function(){
-    const calBtn = document.getElementById('calendar-btn');
-    if(!calBtn) return;
+/********** ADD-TO-CALENDAR (v3 – Safari fixed) ***********/
+(function () {
+  const btn = document.getElementById('calendar-btn');
+  if (!btn) return;
 
-    /* 1) ICS download (unchanged) */
-    function toICS(){
-        const pad = n => String(n).padStart(2,'0');
-        const toUTC = iso => {
-        const d = new Date(iso);
-        return `${d.getUTCFullYear()}${pad(d.getUTCMonth()+1)}${pad(d.getUTCDate())}T${pad(d.getUTCHours())}${pad(d.getUTCMinutes())}${pad(d.getUTCSeconds())}Z`;
-        };
-        const addressEsc = EVENT_LOCATION.replace(/,/g,'\\,');
-        return [
-        'BEGIN:VCALENDAR',
-        'VERSION:2.0',
-        'PRODID:-//EK Wedding//iCal//TR',
-        'CALSCALE:GREGORIAN',
-        'BEGIN:VEVENT',
-        `DTSTART:${toUTC(EVENT_START_ISO)}`,
-        `DTEND:${toUTC(EVENT_END_ISO)}`,
-        `SUMMARY:${EVENT_TITLE}`,
-        `DESCRIPTION:${EVENT_DESCRIPTION}`,
-        `LOCATION:${addressEsc}`,
-        'GEO:39.9411;32.8599',
-        `X-APPLE-STRUCTURED-LOCATION;VALUE=URI;X-ADDRESS="${EVENT_LOCATION}";X-APPLE-RADIUS=72;X-TITLE="Divan Çukurhan":geo:39.9411,32.8599`,
-        `URL:${WEBSITE_URL}`,
-        'END:VEVENT',
-        'END:VCALENDAR'
-        ].join('\r\n');
-    }
-    function downloadICS(){
-        const blob = new Blob([toICS()],{type:'text/calendar'});
-        const url = URL.createObjectURL(blob);
-        const a = Object.assign(document.createElement('a'),{href:url,download:`${EVENT_TITLE.replace(/\s+/g,'_')}.ics`});
-        document.body.appendChild(a); a.click(); document.body.removeChild(a); URL.revokeObjectURL(url);
-    }
+  /* very small user-agent test */
+  const ua  = navigator.userAgent || '';
+  const isAndroid = /Android/i.test(ua);
+  const isWindows = /Windows/i.test(ua);
 
-    /* 2) Google Calendar link – timezone-aware */
-    function openGoogleCal(){
-        const fmtGoogle = iso => iso.slice(0,19).replace(/[-:]/g,''); // YYYYMMDDTHHMMSS (local)
-        const params = new URLSearchParams({
-        action:'TEMPLATE',
-        text:EVENT_TITLE,
-        dates:`${fmtGoogle(EVENT_START_ISO)}/${fmtGoogle(EVENT_END_ISO)}`,
-        details:`${EVENT_DESCRIPTION}\n\n${WEBSITE_URL}`,
-        location:EVENT_LOCATION,
-        ctz: EVENT_TZ
+  /* Use the built-in <a> link for Apple & most desktops.
+     Override only on platforms that need something different. */
+  btn.addEventListener('click', e => {
+    if (isAndroid) {                   // Google Calendar on phones / tablets
+      e.preventDefault();
+      const url =
+        'https://calendar.google.com/calendar/render?' +
+        new URLSearchParams({
+          action:'TEMPLATE',
+          text:"Ekin Gökçe ve Kemal'in Düğünü",
+          dates:'20250628T160000Z/20250628T200000Z',
+          details:"Bu özel günümüzde, Filiz & Şeref Çiçek ile Hacer & Ahmet İnecik olarak sizleri de aramızda görmekten mutluluk duyarız.\n\nhttps://ekingokcevekemal.com",
+          location:'Divan Çukurhan, Necatibey Mah. Depo Sk. No:3, Ulus/Altındağ, Ankara, Türkiye',
+          ctz:'Europe/Istanbul'
         });
-        window.open(`https://calendar.google.com/calendar/render?${params.toString()}`,'_blank');
+      window.open(url,'_blank','noopener');
+    } else if (isWindows) {            // force a download for Outlook users
+      e.preventDefault();
+      fetch('invite/wedding.ics')
+        .then(r => r.blob())
+        .then(blob => {
+          const link = document.createElement('a');
+          link.href = URL.createObjectURL(blob);
+          link.download = 'invite/wedding.ics';
+          link.click();
+          setTimeout(() => URL.revokeObjectURL(link.href), 30000);
+        });
     }
+    /* iOS, macOS and everything else just follow the normal link */
+  });
+})();
 
-    calBtn.addEventListener('click',e=>{e.preventDefault();downloadICS();openGoogleCal();});
-    })();
-
-    /******** COUNTDOWN (seconds) *********/
-    (function(){
-    const el=document.getElementById('countdown'); if(!el) return;
-    el.style.cssText='text-align:center;color:var(--footer-color);font-size:0.7rem;margin-top:40px;';
-    const fmt=n=>String(n).padStart(2,'0');
-    function refresh(){
-        const now=Date.now();const start=new Date(EVENT_START_ISO).getTime();
-        let diff=start-now;let prefix='Düğüne kalan: ';
-        if(diff<0){diff=-diff;prefix='Düğünden bu yana: ';}
-        const days=Math.floor(diff/864e5);
-        const hrs=Math.floor(diff%864e5/36e5);
-        const mins=Math.floor(diff%36e5/6e4);
-        const secs=Math.floor(diff%6e4/1e3);
-        el.textContent=`${prefix} ${days} gün ${fmt(hrs)}:${fmt(mins)}:${fmt(secs)} saat`;
-    }
-    refresh(); setInterval(refresh,1000);
-    })();
 
     /***************************************
      * COUNTDOWN / COUNT‑UP
