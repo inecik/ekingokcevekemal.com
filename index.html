@@ -32,7 +32,7 @@
             --accent-color: #59684d;
             --text-color: #59684d;
             --footer-color: #5a6566;
-            --faq-answer-color: #7d8c8e;
+            --faq-answer-color: #3f4748;
             --light-gray: #edf0f0;
             --line-color: #bcd2d5;
             --transition-speed: 0.2s;
@@ -329,7 +329,7 @@
             padding:8px 4px 0px 0;
             cursor:pointer;
             position:relative;
-            color:var(--accent-color);
+            color:var(--faq-answer-color);
             transition:color var(--transition-speed);
         }
         .faq-question::after{                           /* kutucuktaki + işareti */
@@ -340,7 +340,7 @@
             font-size:1.0rem;
             transition:transform var(--transition-speed);
         }
-        .faq-item.open .faq-question{color:var(--accent-color);}
+        .faq-item.open .faq-question{color:var(--faq-answer-color);}
         .faq-item.open .faq-question::after{transform:translateY(-50%) rotate(45deg);}
         .faq-answer{
             max-height:0;
@@ -348,7 +348,7 @@
             font-size:0.7rem;
             line-height:1.4;
             color:var(--footer-color);
-            opacity:0.85;             
+            opacity:0.90;             
             transition:max-height 0.25s ease;
             padding-right:22px;                         /* artının altından kaçmasın */
             padding-left:11px;
@@ -450,10 +450,10 @@
             <div class="faq-item">
                 <div class="faq-question">Divan Çukurhan'ı neden seçtik?</div>
                 <div class="faq-answer">
-                    Ocak ayında paylaştığımız
+                    <em>Ocak ayında paylaştığımız
                     <a href="https://www.instagram.com/p/DE7-6jwoh_g/?utm_source=ig_web_copy_link&amp;igsh=MzRlODBiNWFlZA==" 
                     target="_blank" rel="noopener" style="font-weight:700; color:inherit;">
-                    Instagram gönderisinde</a> de yazdığımız üzere:
+                    Instagram gönderisinde</a> de yazdığımız üzere:</em>
                     <!-- “ben” anlatımından “biz”e çevrilmiş metin  -->
                     "Çukurhan’ın, 16.&nbsp;yüzyıldan kalma, zamana meydan okuyan taş duvarları, kasım ayının solgun ışıklarında bir zamanlar geçmişte kalan hayatların gölgelerini fısıldar gibi; sessiz, hüzünlü, fakat bir o kadar da vakur.
                     Bu eşsiz hanın avlusunda yankılanan adımlarımız, düğünümüz için hazırlıklara başlarken, bir yandan da bu tarihi mekânın her köşesinde asırlar boyu süzülmüş yaşamların izini sürer. Serin kış gününün ince rüzgârı, hanın içine süzülen güneş ışığı ile kucaklaşırken, burada geçen zamanın nasıl da farklı bir boyuta ulaştığını hissediyoruz: her bir saniye, sanki ebediyetin kapılarını aralar gibi, hem hızlı hem de sonsuz bir ağırlıkta.
