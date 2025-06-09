@@ -32,9 +32,10 @@
             --accent-color: #59684d;
             --text-color: #59684d;
             --footer-color: #727f80;
+            --faq-answer-color: #a0b3b5;
             --light-gray: #edf0f0;
-            --line-color: #59684d79;
-            --transition-speed: 0.1s;
+            --line-color: #bcd2d5;
+            --transition-speed: 0.2s;
 
             --hex-w: 800px;                 /*  ➜ change here if SVG size changes           */
             --hex-h: calc(var(--hex-w)*0.8660254038);   /* √3 / 2 * width                    */
@@ -253,7 +254,7 @@
             text-align: center;
             color: var(--footer-color);
             padding: 40px 0;
-            margin-top: 60px;
+            margin-top: 40px;
             border-top: 1px solid var(--line-color);
             font-size: 0.7rem;
         }
@@ -311,6 +312,48 @@
         .lang-btn{padding:6px 12px;font-size:.8rem;border:1px solid var(--primary-color);background:#fff;color:var(--primary-color);cursor:pointer;border-radius:6px;transition:all var(--transition-speed)}
         .lang-btn.active,.lang-btn:hover{background:var(--primary-color);color:#fff}
 
+        /* ===== FAQ Accordion ===== */
+        .faq-section{
+            margin:40px 0 10px;  /* üstte biraz nefes payı */
+        }        
+        .faq-item{
+            border-top:0px solid var(--line-color);
+        }
+        .faq-item:first-child{
+            border-top:0px solid var(--line-color);
+            padding-top:0px;                          
+        }
+        .faq-question{
+            font-family:'Lora','Georgia',serif;
+            font-size:0.7rem;
+            padding:4px 4px 4px 0;
+            cursor:pointer;
+            position:relative;
+            color:var(--footer-color);
+            transition:color var(--transition-speed);
+        }
+        .faq-question::after{                           /* kutucuktaki + işareti */
+            content:'+';
+            position:absolute;
+            right:0; top:50%;
+            transform:translateY(-50%);
+            font-size:1.0rem;
+            transition:transform var(--transition-speed);
+        }
+        .faq-item.open .faq-question{color:var(--footer-color);}
+        .faq-item.open .faq-question::after{transform:translateY(-50%) rotate(45deg);}
+        .faq-answer{
+            max-height:0;
+            overflow:hidden;
+            font-size:0.7rem;
+            line-height:1.2;
+            color:var(--faq-answer-color);
+            opacity:1.0;             
+            transition:max-height 0.25s ease;
+            padding-right:22px;                         /* artının altından kaçmasın */
+        }
+        .faq-item.open .faq-answer{max-height:500px;}   /* yeterli bir tavan */
+
     </style>
     <link href="https://fonts.googleapis.com/css2?family=Lora:wght@400;500;700&display=swap" rel="stylesheet">
 </head>
@@ -349,71 +392,123 @@
             <a href="invite/wedding.ics" id="calendar-btn" class="action-link" data-i18n="calendar"></a>
         </div>
 
-        <!-- =============== Countdown Timer (appears above footer) =============== -->
         <div id="countdown" class="countdown"></div>
+
+        <!-- ==================== FAQ / SSS ==================== -->
+        <section class="faq-section" id="faq">
+        
+            <div class="faq-item">
+                <div class="faq-question">Tanışma hikâyeniz nedir?</div>
+                <div class="faq-answer">
+                    Tanışma sürecimizin kısa özeti burada paylaşılacaktır.
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question">Biz kimiz ve nelerle meşgulüz?</div>
+                <div class="faq-answer">
+                    Kim olduğumuz ve mesleki yolculuğumuzun kısa özeti burada yer alacaktır.
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question">Etkinlik programı nasıl planlandı?</div>
+                <div class="faq-answer">
+                    Karşılama, nikâh töreni, akşam yemeği ve eğlence saatleri burada belirtilecektir.
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question">Menüde neler olacak?</div>
+                <div class="faq-answer">
+                    Başlangıç, ana yemek, tatlı ve özel diyet seçenekleri buraya eklenecektir.
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question">Çektiğimiz fotoğrafları nasıl paylaşabiliriz?</div>
+                <div class="faq-answer">
+                    Sayfanın üst kısmındaki <strong>“Fotoğraf Paylaş”</strong> butonuna tıklayarak
+                    <strong>sizin çektiğiniz</strong> fotoğraf ve videoları da bize iletebilirsiniz.  
+                    Lütfen WhatsApp’ta <em>“Yüksek Kaliteli Gönder”</em> seçeneğini işaretleyin
+                    ve videolarınızı eklemeyi unutmayın. Emeğiniz bizim için çok değerli —
+                    şimdiden teşekkür ederiz!
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question">Otopark olanakları nelerdir?</div>
+                <div class="faq-answer">
+                    Mekâna ait otopark ve vale hizmeti ayrıntıları burada yer alacaktır.
+                </div>
+            </div>
+
+        </section>
+
+        <!-- =============== Countdown Timer (appears above footer) =============== -->
         <footer>
             <p data-i18n="footer_p1"></p>
         </footer>
 
     </div>
 
-<script>
-    /*************** CONFIG ***************/
-    const EVENT_START_ISO = '2025-06-28T19:00:00+03:00';
-    const EVENT_END_ISO   = '2025-06-28T23:00:00+03:00';
-    const EVENT_TITLE = "Ekin Gökçe ve Kemal'in Düğünü";
-    const EVENT_DESCRIPTION = "Bu özel günümüzde, Filiz & Şeref Çiçek ile Hacer & Ahmet İnecik olarak sizleri de aramızda görmekten mutluluk duyarız.";
-    const EVENT_LOCATION = "Divan Çukurhan, Necatibey Mah. Depo Sk. No:3, Ulus/Altındağ, Ankara, Türkiye";
-    const WEBSITE_URL = 'https://ekingokcevekemal.com';
-    const EVENT_TZ = 'Europe/Istanbul';
+    <script>
+        /*************** CONFIG ***************/
+        const EVENT_START_ISO = '2025-06-28T19:00:00+03:00';
+        const EVENT_END_ISO   = '2025-06-28T23:00:00+03:00';
+        const EVENT_TITLE = "Ekin Gökçe ve Kemal'in Düğünü";
+        const EVENT_DESCRIPTION = "Bu özel günümüzde, Filiz & Şeref Çiçek ile Hacer & Ahmet İnecik olarak sizleri de aramızda görmekten mutluluk duyarız.";
+        const EVENT_LOCATION = "Divan Çukurhan, Necatibey Mah. Depo Sk. No:3, Ulus/Altındağ, Ankara, Türkiye";
+        const WEBSITE_URL = 'https://ekingokcevekemal.com';
+        const EVENT_TZ = 'Europe/Istanbul';
 
-/********** ADD-TO-CALENDAR (v3 – Safari fixed) ***********/
-(function () {
-  const btn = document.getElementById('calendar-btn');
-  if (!btn) return;
+    /********** ADD-TO-CALENDAR (v3 – Safari fixed) ***********/
+    (function () {
+    const btn = document.getElementById('calendar-btn');
+    if (!btn) return;
 
-  // ---- helper: "2025-06-28T19:00:00+03:00" → "20250628T160000Z"
-  const fmtGoogleDate = iso => {
-    const d = new Date(iso);                       // auto-converts to UTC
-    return d.toISOString()                         // "2025-06-28T16:00:00.000Z"
-            .replace(/[-:]/g, '')                  // "20250628T160000.000Z"
-            .replace('.000', '')                   // "20250628T160000Z"
-  };
+    // ---- helper: "2025-06-28T19:00:00+03:00" → "20250628T160000Z"
+    const fmtGoogleDate = iso => {
+        const d = new Date(iso);                       // auto-converts to UTC
+        return d.toISOString()                         // "2025-06-28T16:00:00.000Z"
+                .replace(/[-:]/g, '')                  // "20250628T160000.000Z"
+                .replace('.000', '')                   // "20250628T160000Z"
+    };
 
-  /* very small user-agent test */
-  const ua = navigator.userAgent || '';
-  const isAndroid = /Android/i.test(ua);
-  const isWindows = /Windows/i.test(ua);
+    /* very small user-agent test */
+    const ua = navigator.userAgent || '';
+    const isAndroid = /Android/i.test(ua);
+    const isWindows = /Windows/i.test(ua);
 
-  btn.addEventListener('click', e => {
-    if (isAndroid) {                     // Google Calendar on phones / tablets
-      e.preventDefault();
-      const url =
-        'https://calendar.google.com/calendar/render?' +
-        new URLSearchParams({
-          action: 'TEMPLATE',
-          text: EVENT_TITLE,
-          dates: `${fmtGoogleDate(EVENT_START_ISO)}/${fmtGoogleDate(EVENT_END_ISO)}`,
-          details: `${EVENT_DESCRIPTION}\n\n${WEBSITE_URL}`,
-          location: EVENT_LOCATION,
-          ctz: EVENT_TZ,
-        });
-      window.open(url, '_blank', 'noopener');
-    } else if (isWindows) {              // force a download for Outlook users
-      e.preventDefault();
-      fetch('invite/wedding.ics')
-        .then(r => r.blob())
-        .then(blob => {
-          const link = document.createElement('a');
-          link.href = URL.createObjectURL(blob);
-          link.download = 'invite/wedding.ics';
-          link.click();
-          setTimeout(() => URL.revokeObjectURL(link.href), 30_000);
-        });
-    }
-    /* iOS, macOS and everything else just follow the normal link */
-  });
-})();
+    btn.addEventListener('click', e => {
+        if (isAndroid) {                     // Google Calendar on phones / tablets
+        e.preventDefault();
+        const url =
+            'https://calendar.google.com/calendar/render?' +
+            new URLSearchParams({
+            action: 'TEMPLATE',
+            text: EVENT_TITLE,
+            dates: `${fmtGoogleDate(EVENT_START_ISO)}/${fmtGoogleDate(EVENT_END_ISO)}`,
+            details: `${EVENT_DESCRIPTION}\n\n${WEBSITE_URL}`,
+            location: EVENT_LOCATION,
+            ctz: EVENT_TZ,
+            });
+        window.open(url, '_blank', 'noopener');
+        } else if (isWindows) {              // force a download for Outlook users
+        e.preventDefault();
+        fetch('invite/wedding.ics')
+            .then(r => r.blob())
+            .then(blob => {
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(blob);
+            link.download = 'invite/wedding.ics';
+            link.click();
+            setTimeout(() => URL.revokeObjectURL(link.href), 30_000);
+            });
+        }
+        /* iOS, macOS and everything else just follow the normal link */
+    });
+    })();
 
 
     /***************************************
@@ -452,6 +547,25 @@
 
     tick();               // İlk çizim
     setInterval(tick, 1000); // Her saniye güncelle
+    })();
+
+    /***************  FAQ Accordion (tek-açık)  ***************/
+    (() => {
+    const items = document.querySelectorAll('.faq-item');
+
+    items.forEach(item => {
+        const btn = item.querySelector('.faq-question');
+
+        btn.addEventListener('click', () => {
+        /* 1 — Önce diğerlerini kapat */
+        items.forEach(i => {
+            if (i !== item) i.classList.remove('open');
+        });
+
+        /* 2 — Tıklanan öğeyi aç/kapat */
+        item.classList.toggle('open');
+        });
+    });
     })();
 
     /***************************************
