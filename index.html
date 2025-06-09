@@ -453,14 +453,41 @@
     </div>
 
     <script>
-        /*************** CONFIG ***************/
-        const EVENT_START_ISO = '2025-06-28T19:00:00+03:00';
-        const EVENT_END_ISO   = '2025-06-28T23:00:00+03:00';
-        const EVENT_TITLE = "Ekin Gökçe ve Kemal'in Düğünü";
-        const EVENT_DESCRIPTION = "Bu özel günümüzde, Filiz & Şeref Çiçek ile Hacer & Ahmet İnecik olarak sizleri de aramızda görmekten mutluluk duyarız.";
-        const EVENT_LOCATION = "Divan Çukurhan, Necatibey Mah. Depo Sk. No:3, Ulus/Altındağ, Ankara, Türkiye";
-        const WEBSITE_URL = 'https://ekingokcevekemal.com';
-        const EVENT_TZ = 'Europe/Istanbul';
+    /*************** CONFIG ***************/
+    const EVENT_START_ISO = '2025-06-28T19:00:00+03:00';
+    const EVENT_END_ISO   = '2025-06-28T23:00:00+03:00';
+    const EVENT_TITLE = "Ekin Gökçe ve Kemal'in Düğünü";
+    const EVENT_DESCRIPTION = "Bu özel günümüzde, Filiz & Şeref Çiçek ile Hacer & Ahmet İnecik olarak sizleri de aramızda görmekten mutluluk duyarız.";
+    const EVENT_LOCATION = "Divan Çukurhan, Necatibey Mah. Depo Sk. No:3, Ulus/Altındağ, Ankara, Türkiye";
+    const WEBSITE_URL = 'https://ekingokcevekemal.com';
+    const EVENT_TZ = 'Europe/Istanbul';
+
+    /* Ortak fonksiyon */
+    function trackEvent(action, params = {}) {
+    gtag('event', action, params);
+    }
+
+    /* Action-link’lerin hepsi */
+    document.querySelectorAll('.action-link').forEach(el => {
+    el.addEventListener('click', () => {
+        trackEvent('action_link_click', {
+        link_name: el.dataset.i18n || el.textContent.trim(),
+        link_url: el.href
+        });
+    });
+    });
+
+    /* FAQ akordiyonu */
+    document.querySelectorAll('.faq-question').forEach(q => {
+    q.addEventListener('click', () => {
+        const parent = q.parentElement;
+        const state  = parent.classList.contains('open') ? 'close' : 'open'; // tıklamadan *önceki* durum
+        trackEvent('faq_toggle', {
+        question: q.textContent.trim(),
+        state
+        });
+    });
+    });
 
     /********** ADD-TO-CALENDAR (v3 – Safari fixed) ***********/
     (function () {
